@@ -1,20 +1,22 @@
 # Generate Your QR Code
 
 ## Overview
+
 This application allows users to generate QR codes by entering a URL. The QR code is displayed in a modal, and users can close the modal when they are done.
 
 ## Prerequisites
+
 To run this application, you need to have the following packages installed with the specified versions:
 
-* **`react`** : `^18.3.1`
-* **`react-dom`** : `^18.3.1`
-* **`react-hook-form`** : `^7.53.1`
-* **`qrcode.react`** : `^4.1.0`
-* **`qr-image`** : `^3.2.0`
-* **`typescript`** : `^4.9.5`
-* **`react-scripts`** : `5.0.1`
-* **`browserify-zlib`** : `^0.2.0`
-* **`stream-browserify`** : `^3.0.0`
+- **`react`** : `^18.3.1`
+- **`react-dom`** : `^18.3.1`
+- **`react-hook-form`** : `^7.53.1`
+- **`qrcode.react`** : `^4.1.0`
+- **`qr-image`** : `^3.2.0`
+- **`typescript`** : `^4.9.5`
+- **`react-scripts`** : `5.0.1`
+- **`browserify-zlib`** : `^0.2.0`
+- **`stream-browserify`** : `^3.0.0`
 
 ## Webpack Configuration
 
@@ -23,6 +25,7 @@ To run this application, you need to have the following packages installed with 
 The `webpack.config.js` file was created to handle the bundling of the application. Specifically, it addresses the need to include polyfills for certain Node.js modules that are not available in the browser environment.
 
 ### Explanation
+
 The `browserify-zlib` and `stream-browserify` packages are included in the `package.json` to provide polyfills for the zlib and stream modules, respectively. These modules are required by some dependencies in the project. The `webpack.config.js` file includes the following configuration to resolve these modules:
 
 ```js
@@ -40,23 +43,25 @@ resolve: {
 ### `qrcode.react.d.ts`
 
 #### Issue
+
 The `qrcode.react` package does not provide its own TypeScript type declarations.
 
 #### Explanation
+
 To use `qrcode.react` in a TypeScript project, we need to create a custom type declaration file, `qrcode.react.d.ts`, to define the types for the components provided by the package. This file includes the type definitions for `QRCodeCanvas` and `QRCodeSVG` components:
 
 ```ts
-declare module 'qrcode.react' {
-  import * as React from 'react';
+declare module "qrcode.react" {
+  import * as React from "react";
 
   interface QRCodeProps {
     value: string;
     size?: number;
     bgColor?: string;
     fgColor?: string;
-    level?: 'L' | 'M' | 'Q' | 'H';
+    level?: "L" | "M" | "Q" | "H";
     includeMargin?: boolean;
-    renderAs?: 'canvas' | 'svg';
+    renderAs?: "canvas" | "svg";
     imageSettings?: {
       src: string;
       x?: number;
@@ -75,18 +80,20 @@ declare module 'qrcode.react' {
 ### `qr-image.d.ts`
 
 #### Issue
+
 The `qr-image` package does not provide its own TypeScript type declarations.
 
 #### Explanation
+
 To use `qr-image` in a TypeScript project, we need to create a custom type declaration file, `qr-image`.d.ts, to define the types for the functions provided by the package. This file includes the type definitions for the `imageSync` function:
 
 ```ts
-declare module 'qr-image' {
+declare module "qr-image" {
   interface Options {
-    type?: 'png' | 'svg' | 'pdf' | 'eps';
+    type?: "png" | "svg" | "pdf" | "eps";
     size?: number;
     margin?: number;
-    ec_level?: 'L' | 'M' | 'Q' | 'H';
+    ec_level?: "L" | "M" | "Q" | "H";
   }
 
   function imageSync(text: string, options?: Options): Buffer;
@@ -100,19 +107,21 @@ declare module 'qr-image' {
 In the provided codebase, the qrcode.react package is used to generate and display QR codes within the React application. Specifically, the QRCodeSVG component from the qrcode.react package is imported and used in the `App.tsx` file:
 
 ```ts
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeSVG } from "qrcode.react";
 ```
 
 This component is then rendered inside the Modal component to display the generated QR code:
 
 ```tsx
-{qrCodeUrl && (
-  <Modal qrText={qrCodeUrl} handleClose={handleCloseModal}>
-    <div className='mx-auto'>
-      <QRCodeSVG value={qrCodeUrl} />
-    </div>
-  </Modal>
-)}
+{
+  qrCodeUrl && (
+    <Modal qrText={qrCodeUrl} handleClose={handleCloseModal}>
+      <div className="mx-auto">
+        <QRCodeSVG value={qrCodeUrl} />
+      </div>
+    </Modal>
+  );
+}
 ```
 
 Since `qrcode.react` does not provide its own TypeScript type declarations, we created the `qrcode.react.d.ts` file to define the types for the components provided by the package. This allows us to use the `QRCodeSVG` component with proper type checking in our TypeScript project.
@@ -120,12 +129,17 @@ Since `qrcode.react` does not provide its own TypeScript type declarations, we c
 On the other hand, the `qr-image` package is not used in the provided codebase. Therefore, the `qr-image.d.ts` file, which defines the types for the `qr-image` package, is not utilized in this project.
 
 ## Usage of `react-hook-form`
+
 The `react-hook-form` library is used in this application to manage form state and validation. Here is how it is being used in `App.tsx` :
 
 1. **Form Registration**: The `useForm` hook is used to register the form fields and manage their state.
 
 ```ts
-const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<IFormInput>();
 ```
 
 2. **Form Submission**: The `handleSubmit` function is used to handle form submission. The `onSubmit` function is called when the form is successfully submitted.
@@ -154,6 +168,7 @@ const onSubmit: SubmitHandler<IFormInput> = (data) => {
 ```
 
 4. **Error Handling**: Validation `errors` are displayed using the errors object.
+
 ```ts
 {errors.url && (
   <small className='text-red-500 text-xs mt-1.5'>
