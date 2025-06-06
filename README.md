@@ -22,16 +22,16 @@ To run this application, you need to have the following packages installed with 
 
 ### Issue
 
-The `webpack.config.js` file was created to handle the bundling of the application. Specifically, it addresses the need to include polyfills for certain Node.js modules that are not available in the browser environment.
+The `webpack.config.js` file was created to bundle application code and its dependencies into a format that can run in a web browser. Some **Node.js modules**, like `zlib` (used for compression) and `stream` (used for handling data streams), are not available in the browser by default
 
-### Explanation
+### Resolve
 
-The `browserify-zlib` and `stream-browserify` packages are included in the `package.json` to provide polyfills for the zlib and stream modules, respectively. These modules are required by some dependencies in the project. The `webpack.config.js` file includes the following configuration to resolve these modules:
+The project use `polyfills` -- substitute implementations of these modules that work in the browser: The `browserify-zlib` (used as a replacement for the `zlib` module) and `stream-browserify` (used as a replacement for the `stream` module) packages are included in the `package.json`. The `webpack.config.js` file includes the following configuration to resolve these modules:
 
 ```js
 resolve: {
-  extensions: ['.tsx', '.ts', '.js'],
-  fallback: {
+  extensions: ['.tsx', '.ts', '.js'], // which file extensions to look for when resolving module imports
+  fallback: { // alternative implementations (polyfills) for modules that are not available in the browser
     zlib: require.resolve('browserify-zlib'),
     stream: require.resolve('stream-browserify'),
   },
